@@ -1,4 +1,5 @@
- {% if 'username' in session %}
- {{ session['username'] }}
- {%endif %}
-<h2>Welcome to the website!</h2>
+{% extends "layout.html" %}
+{% block body %}
+<h2>Welcome to the index</h2>
+{% endblock %}
+

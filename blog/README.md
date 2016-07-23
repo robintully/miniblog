@@ -26,3 +26,5 @@ User.query.filter_by(username='Robin').first().check_password('password')
 
 Things to do-
 apply unique filter to username
+change title of website on tab
+figure out actual name of website
