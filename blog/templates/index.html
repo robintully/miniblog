@@ -1,5 +1,14 @@
 {% extends "layout.html" %}
 {% block body %}
-<h2>Welcome to the index</h2>
+  {% for post in posts %}
+    <blockquote>
+    <b>{{post.title}}</b>
+    <p>{{post.content}}</p>
+  <small>{{post.user.username}} {{post.format_time()}}</small>
+</blockquote>
+  {% else %}
+    <li><em>Unbelievable.  No entries here so far</em>
+  {% endfor %}
+
 {% endblock %}
 
