@@ -2,9 +2,15 @@
 {% block body %}
   {% for post in posts %}
     <blockquote>
-    <b>{{post.title}}</b>
+    <a href="/{{post.title}}">
+    	    <b>{{post.title}}</b>
+    </a>
     <p>{{post.content}}</p>
-  <small>{{post.user.username}} {{post.format_time()}}</small>
+  <small>
+     <a href="/users/{{post.user.username}}">
+        {{post.user.username}}
+    </a>
+ {{post.format_time()}}</small>
 </blockquote>
   {% else %}
     <li><em>Unbelievable.  No entries here so far</em>

@@ -3,7 +3,7 @@ from blog import app
 from flask_wtf import Form
 from wtforms import StringField, PasswordField, TextField
 from wtforms.validators import DataRequired, ValidationError, EqualTo
-from blog.models import User, Post
+from blog.models import User, Post, Comment
 from blog import db
 
 def user_exists(form,field):
@@ -23,6 +23,10 @@ class CreatePost(Form):
     title = StringField('title', validators=[DataRequired('please enter title')])
     content = TextField('content', validators=[DataRequired('please enter content')])
 
+class CreateComment(Form):
+    content = TextField('content', validators=[DataRequired('please enter content')])
+
+# Main Route
 
 @app.route("/")
 @app.route("/index")
@@ -30,6 +34,7 @@ def index():
     posts = Post.query.all()
     return render_template('index.html', posts = posts)
 
+# Routes for Login and Authentication
 @app.route("/register",methods = ('GET','POST'))
 def register():
     form = Register()
@@ -63,6 +68,8 @@ def logout():
     return redirect(url_for('index'))
 
 
+# Post routes
+
 @app.route('/createpost', methods = ('GET','POST'))
 def createpost():
     form= CreatePost()
@@ -74,3 +81,21 @@ def createpost():
         flash('New Post Created')
         return redirect(url_for('index'))
     return render_template('create_post.html', form = form)
+
+@app.route('/users/<user>')
+def show_user(user):
+    user = User.query.filter_by(username = user).first()
+    return render_template('show_user.html', user = user)
+
+@app.route('/<title>', methods = ('GET','POST'))
+def show_post(title):
+    post = Post.query.filter_by(title= title).first()
+    form = CreateComment()
+    if request.method == 'POST'  and form.validate() and session['username']:
+        user = User.query.filter_by(username= session['username']).first()
+        comment = Comment(user,post,request.form['content'])
+        db.session.add(comment)
+        db.session.commit()
+        flash('Added Comment')
+        return redirect(url_for('index'))
+    return render_template('show_post.html', post = post, form = form)

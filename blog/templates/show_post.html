@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% block body %}
+<blockquote>
+    <b>{{post.title}}</b>
+    <p>{{post.content}}</p>
+  <small>
+ <a href="/users/{{post.user.username}}">
+        {{post.user.username}}
+    </a>
+   {{post.format_time()}}</small>
+</blockquote>
+
+
+
+
+ {% for comment in post.comments %}
+ <blockquote class="blockquote-reverse">
+  <p>{{comment.content}}</p>
+   <small>
+    <a href="/users/{{comment.user.username}}">
+        {{comment.user.username}}
+    </a> </small>
+</blockquote>
+  {% endfor %}
+
+
+
+<form class="form-horizontal" method="POST" action="/{{post.title}}">
+  <fieldset>
+    <legend>add comment</legend>
+    <div class="form-group">
+        {{ form.hidden_tag() }}
+    </div>
+    <div class="form-group">
+      <label for="inputPassword" class="col-lg-2 control-label">    {{ form.content.label }}</label>
+       <div class="col-lg-10">
+         {{ form.content(size=400) }}
+      {% if form.content.errors %}
+    {% for error in form.content.errors %}
+      {{ error }}
+    {% endfor %}
+  {% endif %}
+     </div>
+    </div>
+    <div class="form-group">
+      <div class="col-lg-10 col-lg-offset-2">
+        <button type="reset" class="btn btn-default">Clear</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+  </fieldset>
+</form>
+{% endblock %}

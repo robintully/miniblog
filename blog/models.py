@@ -10,6 +10,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True)
     pw_hash = db.Column(db.String(160))
+    admin = db.Column(db.Boolean, default=False)
 
     def __init__(self, username, password):
         self.username = username
@@ -56,12 +57,12 @@ class Comment(db.Model):
     post = db.relationship('Post', backref='comments')
 
 
-    def __init__(self, author,post, content):
-        self.author_id = author.id
+    def __init__(self, user,post, content):
+        self.user_id = user.id
         self.post_id = post.id
         self.content = content
 
     def __repr__(self):
-        return 'title: %r   author %r' % self.title, self.author
+        return 'content: %r' % self.content
 
    

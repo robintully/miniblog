@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block body %}
+<h3>{{user.username}}</h3>
+<br>
+
+<h4>Posts</h4>
+{% for post in user.posts %}
+    <blockquote>
+    <a href="/{{post.title}}">
+          <b>{{post.title}}</b>
+    </a>
+    <p>{{post.content}}</p>
+  <small>{{post.user.username}} {{post.format_time()}}</small>
+</blockquote>
+  {% endfor %}
+
+<br>
+<h4>Comments</h4>
+
+{% for comment in user.comments %}
+    <blockquote>
+    <a href="/{{comment.post.title}}">
+          <b>{{comment.content}}</b>
+    </a>
+  <small>{{comment.user.username}}</small>
+</blockquote>
+  {% endfor %}
+
+
+{% endblock %}

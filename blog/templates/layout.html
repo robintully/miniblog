@@ -5,7 +5,7 @@
     <script src="http://code.jquery.com/jquery-latest.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Robin's Blog</title>
+    <title>Gotham Blog</title>
 </head>
 
 
@@ -36,7 +36,7 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
        {% if 'username' in session %}
-       <li><a href=""> {{ session['username'] }}</a></li>
+       <li><a href="/users/{{session['username']}}"> {{ session['username'] }}</a></li>
        <li><a href="/createpost">Create Post</a></li>
        <li><a href="/logout">Log Out</a></li>
        {% else %}
