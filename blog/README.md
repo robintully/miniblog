@@ -37,5 +37,6 @@ add verify user exists before allow access to create post
 maybe add profile for authors
 make all the links
 fix the post creation form(adjust content size and fix 'name to say title')
+add link from username to show page
 
  <span class="help-block">A longer block of help text that breaks onto a new line and may extend beyond one line.</span>
