@@ -1,5 +1,6 @@
-from blog import app
+from flask import current_app
 from blog import db
+
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
