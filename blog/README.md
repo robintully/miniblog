@@ -32,15 +32,10 @@ User.query.get(1).check_password('password')
 User.query.filter_by(username='Robin').first().check_password('password')
 
 Things to do-
-
+find way to pass current user into all views, change admin determination in link page.
 add verify user exists before allow access to create post
-maybe add profile for authors
-make all the links
 fix the post creation form(adjust content size and fix 'name to say title')
-add link from username to show page
-decide whether i want post names to be unique or to
 could add wrappers
 make webpages inaccessible
-fix redirects to id so that they dont messup
 
- <span class="help-block">A longer block of help text that breaks onto a new line and may extend beyond one line.</span>
+

@@ -37,7 +37,7 @@
       <ul class="nav navbar-nav navbar-right">
        {% if 'user_id' in session %}
        <li><a href="/users/{{session['user_id']}}"> My Profile </a></li>
-       {% if  session['username'] == 'admin'%}
+       {% if  session['user_id'] == 4 %}
        <li><a href="/admin">Administrate!</a></li>
        {% endif %}
        <li><a href="/createpost">Create Post</a></li>

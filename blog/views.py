@@ -32,16 +32,11 @@ class UpdateForm(Form):
     content = TextAreaField('content', validators=[DataRequired('please enter content')])
 
 
-# Find User
-# def get_user(f):
-#     @wraps(f)
-#     def decorated_function(*args, **kwargs):
-#         if session['user_id']:
-#             current_user = User.query.get(session[:user_id])
-#         return f(*args, **kwargs)
-#     return decorated_function
 
 
+# @app.context_processor:
+# def inject_user():
+#     return dict(user= User.query.get(session['user_id'])
 
 
 
@@ -89,7 +84,7 @@ def logout():
 # Admin Route
 @app.route('/admin')
 def admin():
-    if session['username'] == 'admin':
+    if User.query.get(session['user_id']).username == 'admin':
         users = User.query.all()
         posts = Post.query.all()
         comments = Comment.query.all()
@@ -102,8 +97,8 @@ def admin():
 @app.route('/createpost', methods = ('GET','POST'))
 def createpost():
     form= CreatePost()
-    if request.method == 'POST'  and form.validate() and session['username']:
-        user = User.query.filter_by(username= session['username']).first()
+    if request.method == 'POST'  and form.validate() and session['user_id']:
+        user = User.query.get(session['user_id'])
         post = Post(user,request.form['title'],request.form['content'])
         db.session.add(post)
         db.session.commit()
