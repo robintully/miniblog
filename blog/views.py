@@ -27,6 +27,10 @@ class CreatePost(Form):
 class CreateComment(Form):
     content = TextField('content', validators=[DataRequired('please enter content')])
 
+class UpdateForm(Form):
+    title = StringField('title', validators=[DataRequired('please enter title')])
+    content = TextField('content', validators=[DataRequired('please enter content')])
+
 # Main Route
 
 @app.route("/")
@@ -106,10 +110,28 @@ def delete_comment():
     db.session.commit()
     return render_template('show_user.html', user = user)
 
+@app.route('/update/<title>', methods = ['POST'])
+def update_post(title):
+
+    post = Post.query.filter_by(title= title).first()
+    if request.form['title']:
+        post.title = request.form['title'] 
+    if request.form['content']:
+        post.content = request.form['content']
+    db.session.commit()
+    return redirect(url_for('index'))
+
+
+
+
 @app.route('/<title>', methods = ('GET','POST'))
 def show_post(title):
     post = Post.query.filter_by(title= title).first()
     form = CreateComment()
+    update_form = UpdateForm()
+    update_form.title.data = post.title
+    update_form.content.data = post.content
+
     if request.method == 'POST'  and form.validate() and session['username']:
         user = User.query.filter_by(username= session['username']).first()
         comment = Comment(user,post,request.form['content'])
@@ -117,4 +139,4 @@ def show_post(title):
         db.session.commit()
         flash('Added Comment')
         return redirect(url_for('index'))
-    return render_template('show_post.html', post = post, form = form)
+    return render_template('show_post.html', post = post, form = form, update_form = update_form)

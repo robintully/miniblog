@@ -41,5 +41,6 @@ add link from username to show page
 decide whether i want post names to be unique or to
 could add wrappers
 make webpages inaccessible
+fix redirects to id so that they dont messup
 
  <span class="help-block">A longer block of help text that breaks onto a new line and may extend beyond one line.</span>

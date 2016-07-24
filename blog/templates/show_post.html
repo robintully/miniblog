@@ -32,7 +32,7 @@
         {{ form.hidden_tag() }}
     </div>
     <div class="form-group">
-      <label for="inputPassword" class="col-lg-2 control-label">    {{ form.content.label }}</label>
+      <label for="comment" class="col-lg-2 control-label">    {{ form.content.label }}</label>
        <div class="col-lg-10">
          {{ form.content(size=400) }}
       {% if form.content.errors %}
@@ -42,6 +42,48 @@
   {% endif %}
      </div>
     </div>
+    <div class="form-group">
+      <div class="col-lg-10 col-lg-offset-2">
+        <button type="reset" class="btn btn-default">Clear</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+  </fieldset>
+</form>
+{% endif %}
+
+{% if session['username']  == post.user.username %}
+<form class="form-horizontal" method="POST" action="/update/{{post.title}}">
+    <fieldset>
+    <legend>Update the Post</legend>
+    <div class="form-group">
+        {{ update_form.hidden_tag() }}
+      <label for="inputTitle" class="col-lg-2 control-label"> {{ update_form.title.label }}</label>
+      <div class="col-lg-10">
+         {{ update_form.title (size=20) }}
+      {% if update_form.title.errors %}
+    {% for error in update_form.title.errors %}
+      {{ error }}
+    {% endfor %}
+  {% endif %}
+     </div>
+    </div>
+    <div class="form-group">
+      <label for="inputcContent" class="col-lg-2 control-label">    {{ update_form.content.label }}</label>
+       <div class="col-lg-10">
+         {{ update_form.content(size=400) }}
+      {% if update_form.content.errors %}
+    {% for error in update_form.content.errors %}
+      {{ error }}
+    {% endfor %}
+  {% endif %}
+     </div>
+      
+    </div>
+    
+   
+
+
     <div class="form-group">
       <div class="col-lg-10 col-lg-offset-2">
         <button type="reset" class="btn btn-default">Clear</button>
