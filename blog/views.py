@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, request, session,flash
 from blog import app
 from flask_wtf import Form
-from wtforms import StringField, PasswordField, TextField
+from wtforms import StringField, PasswordField, TextField, TextAreaField
 from wtforms.validators import DataRequired, ValidationError, EqualTo
 from blog.models import User, Post, Comment
 from blog import db
@@ -22,14 +22,14 @@ class Register(Form):
 
 class CreatePost(Form):
     title = StringField('title', validators=[DataRequired('please enter title')])
-    content = TextField('content', validators=[DataRequired('please enter content')])
+    content = TextAreaField('content', validators=[DataRequired('please enter content')])
 
 class CreateComment(Form):
     content = TextField('content', validators=[DataRequired('please enter content')])
 
 class UpdateForm(Form):
     title = StringField('title', validators=[DataRequired('please enter title')])
-    content = TextField('content', validators=[DataRequired('please enter content')])
+    content = TextAreaField('content', validators=[DataRequired('please enter content')])
 
 # Main Route
 

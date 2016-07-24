@@ -7,7 +7,7 @@
         {{ form.hidden_tag() }}
       <label for="inputTitle" class="col-lg-2 control-label"> {{ form.title.label }}</label>
       <div class="col-lg-10">
-         {{ form.title (size=20) }}
+         {{ form.title (style="width:80%") }}
       {% if form.title.errors %}
     {% for error in form.title.errors %}
       {{ error }}
@@ -18,7 +18,7 @@
     <div class="form-group">
       <label for="inputcContent" class="col-lg-2 control-label">    {{ form.content.label }}</label>
        <div class="col-lg-10">
-         {{ form.content(size=400) }}
+         {{ form.content(style="width:80%", rows=30) }}
       {% if form.content.errors %}
     {% for error in form.content.errors %}
       {{ error }}

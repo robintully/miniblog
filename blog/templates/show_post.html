@@ -34,7 +34,7 @@
     <div class="form-group">
       <label for="comment" class="col-lg-2 control-label">    {{ form.content.label }}</label>
        <div class="col-lg-10">
-         {{ form.content(size=400) }}
+         {{ form.content (style="width:80%") }}
       {% if form.content.errors %}
     {% for error in form.content.errors %}
       {{ error }}
@@ -60,7 +60,7 @@
         {{ update_form.hidden_tag() }}
       <label for="inputTitle" class="col-lg-2 control-label"> {{ update_form.title.label }}</label>
       <div class="col-lg-10">
-         {{ update_form.title (size=20) }}
+         {{ update_form.title (style="width:80%")}}
       {% if update_form.title.errors %}
     {% for error in update_form.title.errors %}
       {{ error }}
@@ -71,7 +71,7 @@
     <div class="form-group">
       <label for="inputcContent" class="col-lg-2 control-label">    {{ update_form.content.label }}</label>
        <div class="col-lg-10">
-         {{ update_form.content(size=400) }}
+                {{ update_form.content(style="width:80%", rows=30) }}
       {% if update_form.content.errors %}
     {% for error in update_form.content.errors %}
       {{ error }}
