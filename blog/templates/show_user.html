@@ -6,7 +6,7 @@
 <h4>Posts</h4>
 {% for post in user.posts %}
     <blockquote>
-    <a href="/{{post.title}}">
+    <a href="/posts/{{post.id}}">
           <b>{{post.title}}</b>
     </a>
     <p>{{post.content}}</p>
@@ -27,14 +27,14 @@
 
 {% for comment in user.comments %}
     <blockquote>
-    <a href="/{{comment.post.title}}">
+    <a href="/posts/{{comment.post.id}}">
           <b>{{comment.content}}</b>
     </a>
   <small>{{comment.user.username}}
     {% if session['username'] == comment.user.username: %}
     <form action="delete_comment" method="post">
     <input type="hidden" name="comment" value="{{comment.id}}">
-    <input type="submit" value="Delete" />
+    <input type="submit" value="Delete" >
 </form>
   {% endif %}
   </small>

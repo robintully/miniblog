@@ -2,12 +2,12 @@
 {% block body %}
   {% for post in posts %}
     <blockquote>
-    <a href="/{{post.title}}">
+    <a href="/posts/{{post.id}}">
     	    <b>{{post.title}}</b>
     </a>
     <p>{{post.content}}</p>
   <small>
-     <a href="/users/{{post.user.username}}">
+     <a href="/users/{{post.user.id}}">
         {{post.user.username}}
     </a>
  {{post.format_time()}}</small>

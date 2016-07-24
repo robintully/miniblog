@@ -19,7 +19,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/index"> Gotham Blog</a>
+      <a class="navbar-brand" href="/index"> Gotham Blog </a>
     </div>
 
 {% with messages = get_flashed_messages() %}
@@ -35,8 +35,11 @@
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
-       {% if 'username' in session %}
-       <li><a href="/users/{{session['username']}}"> {{ session['username'] }}</a></li>
+       {% if 'user_id' in session %}
+       <li><a href="/users/{{session['user_id']}}"> My Profile </a></li>
+       {% if  session['username'] == 'admin'%}
+       <li><a href="/admin">Administrate!</a></li>
+       {% endif %}
        <li><a href="/createpost">Create Post</a></li>
        <li><a href="/logout">Log Out</a></li>
        {% else %}

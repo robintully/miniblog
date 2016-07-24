@@ -4,7 +4,7 @@
     <b>{{post.title}}</b>
     <p>{{post.content}}</p>
   <small>
- <a href="/users/{{post.user.username}}">
+ <a href="/users/{{post.user.id}}">
         {{post.user.username}}
     </a>
    {{post.format_time()}}</small>
@@ -17,7 +17,7 @@
  <blockquote class="blockquote-reverse">
   <p>{{comment.content}}</p>
    <small>
-    <a href="/users/{{comment.user.username}}">
+    <a href="/users/{{comment.user.id}}">
         {{comment.user.username}}
     </a> </small>
 </blockquote>
@@ -25,7 +25,7 @@
 
 
 {% if session['username'] %}
-<form class="form-horizontal" method="POST" action="/{{post.title}}">
+<form class="form-horizontal" method="POST" action="/posts/{{post.id}}">
   <fieldset>
     <legend>add comment</legend>
     <div class="form-group">
@@ -53,7 +53,7 @@
 {% endif %}
 
 {% if session['username']  == post.user.username %}
-<form class="form-horizontal" method="POST" action="/update/{{post.title}}">
+<form class="form-horizontal" method="POST" action="/update/{{post.id}}">
     <fieldset>
     <legend>Update the Post</legend>
     <div class="form-group">

@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block body %}
+
+
+ <div class="col-sm-4">
+ {% for user in users %}
+ <h3>{{user.username}}</h3>
+ <form action="delete_user" method="post">
+    <input type="hidden" name="user" value="{{user.id}}">
+    <input type="submit" value="Delete" />
+</form>
+ {% endfor %}
+ </div>
+
+
+  <div class="col-sm-4">
+ {% for post in posts %}
+ <h4>{{post.title}}</h4>
+   <form action="delete_post" method="post">
+    <input type="hidden" name="post" value="{{post.id}}">
+    <input type="submit" value="Delete" />
+</form>
+ {% endfor %}
+  </div>
+
+   <div class="col-sm-4">
+ {% for comment in comments %}
+ <h4>{{comment.content}}</h4>
+   <form action="delete_comment" method="post">
+    <input type="hidden" name="comment" value="{{comment.id}}">
+    <input type="submit" value="Delete" />
+</form>
+ {% endfor %}
+  </div>
+
+
+{% endblock %}

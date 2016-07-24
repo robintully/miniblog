@@ -31,6 +31,21 @@ class UpdateForm(Form):
     title = StringField('title', validators=[DataRequired('please enter title')])
     content = TextAreaField('content', validators=[DataRequired('please enter content')])
 
+
+# Find User
+# def get_user(f):
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         if session['user_id']:
+#             current_user = User.query.get(session[:user_id])
+#         return f(*args, **kwargs)
+#     return decorated_function
+
+
+
+
+
+
 # Main Route
 
 @app.route("/")
@@ -47,7 +62,7 @@ def register():
         new_user = User(request.form['name'],request.form['password'])
         db.session.add(new_user)
         db.session.commit()
-        session['username'] = request.form['name']
+        session['user_id'] = new_user.id
         flash('You created a new user')
         return redirect(url_for('index'))
     return render_template('register.html',form = form)
@@ -57,9 +72,8 @@ def login():
     form = LogIn()
     if request.method == 'POST'  and form.validate():
         user = User.query.filter_by(username= request.form['name']).first()
-        if user != None:
-            user.check_password(request.form['password'])
-            session['username'] = request.form['name']
+        if user.check_password(request.form['password']):
+            session['user_id'] = user.id
             flash('You were successfully logged in')
             return redirect(url_for('index'))
         else:
@@ -68,9 +82,19 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.pop('username', None)
+    session.pop('user_id', None)
     flash('You were successfully logged out')
     return redirect(url_for('index'))
+
+# Admin Route
+@app.route('/admin')
+def admin():
+    if session['username'] == 'admin':
+        users = User.query.all()
+        posts = Post.query.all()
+        comments = Comment.query.all()
+        return render_template('admin.html', users = users, posts = posts, comments = comments)
+
 
 
 # Post routes
@@ -84,15 +108,17 @@ def createpost():
         db.session.add(post)
         db.session.commit()
         flash('New Post Created')
-        return redirect(url_for('index'))
+        return redirect(url_for('show_post',post_id = post.id))
     return render_template('create_post.html', form = form)
 
-@app.route('/users/<user>')
-def show_user(user):
-    user = User.query.filter_by(username = user).first()
+@app.route('/users/<int:user_id>')
+def show_user(user_id):
+    user = User.query.get(user_id)
     return render_template('show_user.html', user = user)
 
-@app.route('/users/delete_post', methods = ['POST'])
+# Deletes
+
+@app.route('/delete_post', methods = ['POST'])
 def delete_post():
     user = User.query.filter_by(username= session['username']).first()
     post = Post.query.get(request.form['post'])
@@ -100,33 +126,49 @@ def delete_post():
         db.session.delete(comment)
     db.session.delete(post)
     db.session.commit()
+    if user.admin:
+        return redirect(url_for('admin'))
     return render_template('show_user.html', user = user)
 
-@app.route('/users/delete_comment', methods = ['POST'])
+@app.route('/delete_comment', methods = ['POST'])
 def delete_comment():
     user = User.query.filter_by(username= session['username']).first()
     comment = Comment.query.get(request.form['comment'])
     db.session.delete(comment)
     db.session.commit()
+    if user.admin:
+        return redirect(url_for('admin'))
     return render_template('show_user.html', user = user)
 
-@app.route('/update/<title>', methods = ['POST'])
-def update_post(title):
+@app.route('/delete_user', methods = ['POST'])
+def delete_user():
+    user = User.query.get(request.form['user'])
+    for post in user.posts:
+        db.session.delete(post)
+    for comment in user.comments:
+         db.session.delete(comment)
+    db.session.delete(user)
+    db.session.commit()
+    return redirect(url_for('admin'))
 
-    post = Post.query.filter_by(title= title).first()
+# Update
+@app.route('/update/<int:post_id>', methods = ['POST'])
+def update_post(post_id):
+
+    post = Post.query.get(post_id)
     if request.form['title']:
         post.title = request.form['title'] 
     if request.form['content']:
         post.content = request.form['content']
     db.session.commit()
-    return redirect(url_for('index'))
+    return redirect(url_for('show_post',post_id = post.id))
 
 
 
 
-@app.route('/<title>', methods = ('GET','POST'))
-def show_post(title):
-    post = Post.query.filter_by(title= title).first()
+@app.route('/posts/<int:post_id>', methods = ('GET','POST'))
+def show_post(post_id):
+    post = Post.query.get(post_id)
     form = CreateComment()
     update_form = UpdateForm()
     update_form.title.data = post.title
@@ -138,5 +180,4 @@ def show_post(title):
         db.session.add(comment)
         db.session.commit()
         flash('Added Comment')
-        return redirect(url_for('index'))
     return render_template('show_post.html', post = post, form = form, update_form = update_form)
