@@ -24,7 +24,7 @@
   {% endfor %}
 
 
-
+{% if session['username'] %}
 <form class="form-horizontal" method="POST" action="/{{post.title}}">
   <fieldset>
     <legend>add comment</legend>
@@ -50,4 +50,5 @@
     </div>
   </fieldset>
 </form>
+{% endif %}
 {% endblock %}

@@ -14,6 +14,8 @@ process so far
 9. going to add nav bar
 10. adding validations for login
 11. add flash
+12. add registation form, add comments form, add posts form
+13. add show page for posts, add show page for users
 
 
 Databse info -
@@ -30,14 +32,14 @@ User.query.get(1).check_password('password')
 User.query.filter_by(username='Robin').first().check_password('password')
 
 Things to do-
-apply unique filter to username
-change title of website on tab
-figure out actual name of website
+
 add verify user exists before allow access to create post
 maybe add profile for authors
 make all the links
 fix the post creation form(adjust content size and fix 'name to say title')
 add link from username to show page
 decide whether i want post names to be unique or to
+could add wrappers
+make webpages inaccessible
 
  <span class="help-block">A longer block of help text that breaks onto a new line and may extend beyond one line.</span>

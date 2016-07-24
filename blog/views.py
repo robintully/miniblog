@@ -5,6 +5,7 @@ from wtforms import StringField, PasswordField, TextField
 from wtforms.validators import DataRequired, ValidationError, EqualTo
 from blog.models import User, Post, Comment
 from blog import db
+from functools import wraps
 
 def user_exists(form,field):
     if User.query.filter_by(username= request.form['name']).first():
@@ -85,6 +86,24 @@ def createpost():
 @app.route('/users/<user>')
 def show_user(user):
     user = User.query.filter_by(username = user).first()
+    return render_template('show_user.html', user = user)
+
+@app.route('/users/delete_post', methods = ['POST'])
+def delete_post():
+    user = User.query.filter_by(username= session['username']).first()
+    post = Post.query.get(request.form['post'])
+    for comment in post.comments:
+        db.session.delete(comment)
+    db.session.delete(post)
+    db.session.commit()
+    return render_template('show_user.html', user = user)
+
+@app.route('/users/delete_comment', methods = ['POST'])
+def delete_comment():
+    user = User.query.filter_by(username= session['username']).first()
+    comment = Comment.query.get(request.form['comment'])
+    db.session.delete(comment)
+    db.session.commit()
     return render_template('show_user.html', user = user)
 
 @app.route('/<title>', methods = ('GET','POST'))
