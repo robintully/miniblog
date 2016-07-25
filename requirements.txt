@@ -9,5 +9,4 @@ SQLAlchemy==0.7.9
 WTForms==1.0.2
 Werkzeug==0.8.3
 decorator==3.4.0
-distribute==0.6.27
 sqlalchemy-migrate==0.7.2
