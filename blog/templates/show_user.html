@@ -13,7 +13,7 @@
   </a>
   <p>{{post.content}}</p>
   <small>{{post.user.username}} {{post.format_time()}}
-    {% if session['username'] == post.user.username: %}
+    {% if user == post.user: %}
     <form action="delete_post" method="post">
       <input type="hidden" name="post" value="{{post.id}}">
       <input type="submit" value="Delete" />
@@ -33,7 +33,7 @@
     <b>{{comment.content}}</b>
   </a>
   <small>{{comment.user.username}}
-    {% if session['username'] == comment.user.username: %}
+    {% if user == comment.user: %}
     <form action="delete_comment" method="post">
       <input type="hidden" name="comment" value="{{comment.id}}">
       <input type="submit" value="Delete" >

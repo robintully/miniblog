@@ -97,6 +97,7 @@ def update_post(post_id):
     db.session.commit()
     return redirect(url_for('show_post',post_id = post.id))
 
+@app.route('/users/delete_post', methods = ['POST'])
 @app.route('/delete_post', methods = ['POST'])
 def delete_post():
     user = User.query.get(session['user_id'])
@@ -128,6 +129,7 @@ def delete_user():
 
 
 # Comments, can't be updated, you can't change what you say but if its really an issue you can delete a comment
+@app.route('/users/delete_comment', methods = ['POST'])
 @app.route('/delete_comment', methods = ['POST'])
 def delete_comment():
     user = User.query.get(session['user_id'])
