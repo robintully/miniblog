@@ -1,45 +1,47 @@
 {% extends "layout.html" %}
 {% block body %}
+<!-- Display Username -->
 <h3>{{user.username}}</h3>
 <br>
-
 <h4>Posts</h4>
-{% for post in user.posts %}
-    <blockquote>
-    <a href="/posts/{{post.id}}">
-          <b>{{post.title}}</b>
-    </a>
-    <p>{{post.content}}</p>
-  <small>{{post.user.username}} {{post.format_time()}}
-  {% if session['username'] == post.user.username: %}
-  <form action="delete_post" method="post">
-    <input type="hidden" name="post" value="{{post.id}}">
-    <input type="submit" value="Delete" />
-</form>
 
-  {% endif %}
+<!-- Show all the users posts -->
+{% for post in user.posts %}
+<blockquote>
+  <a href="/posts/{{post.id}}">
+    <b>{{post.title}}</b>
+  </a>
+  <p>{{post.content}}</p>
+  <small>{{post.user.username}} {{post.format_time()}}
+    {% if session['username'] == post.user.username: %}
+    <form action="delete_post" method="post">
+      <input type="hidden" name="post" value="{{post.id}}">
+      <input type="submit" value="Delete" />
+    </form>
+
+    {% endif %}
   </small>
 </blockquote>
-  {% endfor %}
-
+{% endfor %}
 <br>
-<h4>Comments</h4>
 
+<!-- Show all the users comments -->
+<h4>Comments</h4>
 {% for comment in user.comments %}
-    <blockquote>
-    <a href="/posts/{{comment.post.id}}">
-          <b>{{comment.content}}</b>
-    </a>
+<blockquote>
+  <a href="/posts/{{comment.post.id}}">
+    <b>{{comment.content}}</b>
+  </a>
   <small>{{comment.user.username}}
     {% if session['username'] == comment.user.username: %}
     <form action="delete_comment" method="post">
-    <input type="hidden" name="comment" value="{{comment.id}}">
-    <input type="submit" value="Delete" >
-</form>
-  {% endif %}
+      <input type="hidden" name="comment" value="{{comment.id}}">
+      <input type="submit" value="Delete" >
+    </form>
+    {% endif %}
   </small>
 </blockquote>
-  {% endfor %}
+{% endfor %}
 
 
 {% endblock %}

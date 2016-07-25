@@ -1,48 +1,13 @@
 from flask import render_template, redirect, url_for, request, session,flash
 from blog import app
-from flask_wtf import Form
-from wtforms import StringField, PasswordField, TextField, TextAreaField
-from wtforms.validators import DataRequired, ValidationError, EqualTo
 from blog.models import User, Post, Comment
+from blog.forms import LogIn,Register,CreatePost,CreateComment,UpdateForm
 from blog import db
 from functools import wraps
 
-def user_exists(form,field):
-    if User.query.filter_by(username= request.form['name']).first():
-        raise ValidationError("name taken")
+# Views have to assign variables, render methods, and instantiate templates with passed in variables
 
-class LogIn(Form):
-    name = StringField('name', validators=[DataRequired('please enter name')])
-    password = PasswordField('password', validators=[DataRequired('please enter password')])
-
-class Register(Form):
-    name = StringField('name', validators=[DataRequired('please enter name'),user_exists])
-    password = PasswordField('password', validators=[DataRequired('please enter password'),EqualTo('confirm_password', message = "passwords must match") ,])
-    confirm_password = PasswordField('confirm password', validators=[DataRequired('please enter password')])
-
-class CreatePost(Form):
-    title = StringField('title', validators=[DataRequired('please enter title')])
-    content = TextAreaField('content', validators=[DataRequired('please enter content')])
-
-class CreateComment(Form):
-    content = TextField('content', validators=[DataRequired('please enter content')])
-
-class UpdateForm(Form):
-    title = StringField('title', validators=[DataRequired('please enter title')])
-    content = TextAreaField('content', validators=[DataRequired('please enter content')])
-
-
-
-
-# @app.context_processor:
-# def inject_user():
-#     return dict(user= User.query.get(session['user_id'])
-
-
-
-
-# Main Route
-
+# Main page, show all the posts
 @app.route("/")
 @app.route("/index")
 def index():
@@ -84,18 +49,16 @@ def logout():
 # Admin Route
 @app.route('/admin')
 def admin():
-    if User.query.get(session['user_id']).username == 'admin':
+    # Admin is always the first user registered
+    if session['user_id'] == 1:
         users = User.query.all()
         posts = Post.query.all()
         comments = Comment.query.all()
         return render_template('admin.html', users = users, posts = posts, comments = comments)
 
-
-
 # Post routes
-
-@app.route('/createpost', methods = ('GET','POST'))
-def createpost():
+@app.route('/create_post', methods = ('GET','POST'))
+def create_post():
     form= CreatePost()
     if request.method == 'POST'  and form.validate() and session['user_id']:
         user = User.query.get(session['user_id'])
@@ -106,12 +69,33 @@ def createpost():
         return redirect(url_for('show_post',post_id = post.id))
     return render_template('create_post.html', form = form)
 
-@app.route('/users/<int:user_id>')
-def show_user(user_id):
-    user = User.query.get(user_id)
-    return render_template('show_user.html', user = user)
+@app.route('/posts/<int:post_id>', methods = ('GET','POST'))
+def show_post(post_id):
+    user = User.query.get(session['user_id'])
+    post = Post.query.get(post_id)
+    form = CreateComment()
+    update_form = UpdateForm()
+    update_form.title.data = post.title
+    update_form.content.data = post.content
 
-# Deletes
+    if request.method == 'POST'  and form.validate() and session['user_id']:
+        user = User.query.get(session['user_id'])
+        comment = Comment(user,post,request.form['content'])
+        db.session.add(comment)
+        db.session.commit()
+        flash('Added Comment')
+    return render_template('show_post.html', post = post, form = form, update_form = update_form, user = user)
+
+@app.route('/update/<int:post_id>', methods = ['POST'])
+def update_post(post_id):
+    post = Post.query.get(post_id)
+    user = User.query.get(session['user_id'])
+    if request.form['title'] and user.username == post.user.username:
+        post.title = request.form['title'] 
+    if request.form['content']and user.username == post.user.username:
+        post.content = request.form['content']
+    db.session.commit()
+    return redirect(url_for('show_post',post_id = post.id))
 
 @app.route('/delete_post', methods = ['POST'])
 def delete_post():
@@ -125,14 +109,10 @@ def delete_post():
         return redirect(url_for('admin'))
     return render_template('show_user.html', user = user)
 
-@app.route('/delete_comment', methods = ['POST'])
-def delete_comment():
-    user = User.query.get(session['user_id'])
-    comment = Comment.query.get(request.form['comment'])
-    db.session.delete(comment)
-    db.session.commit()
-    if user.admin:
-        return redirect(url_for('admin'))
+# User Methods
+@app.route('/users/<int:user_id>')
+def show_user(user_id):
+    user = User.query.get(user_id)
     return render_template('show_user.html', user = user)
 
 @app.route('/delete_user', methods = ['POST'])
@@ -146,33 +126,14 @@ def delete_user():
     db.session.commit()
     return redirect(url_for('admin'))
 
-# Update
-@app.route('/update/<int:post_id>', methods = ['POST'])
-def update_post(post_id):
 
-    post = Post.query.get(post_id)
-    if request.form['title']:
-        post.title = request.form['title'] 
-    if request.form['content']:
-        post.content = request.form['content']
+# Comments, can't be updated, you can't change what you say but if its really an issue you can delete a comment
+@app.route('/delete_comment', methods = ['POST'])
+def delete_comment():
+    user = User.query.get(session['user_id'])
+    comment = Comment.query.get(request.form['comment'])
+    db.session.delete(comment)
     db.session.commit()
-    return redirect(url_for('show_post',post_id = post.id))
-
-
-
-
-@app.route('/posts/<int:post_id>', methods = ('GET','POST'))
-def show_post(post_id):
-    post = Post.query.get(post_id)
-    form = CreateComment()
-    update_form = UpdateForm()
-    update_form.title.data = post.title
-    update_form.content.data = post.content
-
-    if request.method == 'POST'  and form.validate() and session['user_id']:
-        user = User.query.get(session['user_id'])
-        comment = Comment(user,post,request.form['content'])
-        db.session.add(comment)
-        db.session.commit()
-        flash('Added Comment')
-    return render_template('show_post.html', post = post, form = form, update_form = update_form)
+    if user.admin:
+        return redirect(url_for('admin'))
+    return render_template('show_user.html', user = user)

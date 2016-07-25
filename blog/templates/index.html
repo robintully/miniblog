@@ -1,20 +1,16 @@
 {% extends "layout.html" %}
 {% block body %}
-  {% for post in posts %}
-    <blockquote>
-    <a href="/posts/{{post.id}}">
-    	    <b>{{post.title}}</b>
-    </a>
-    <p>{{post.content}}</p>
-  <small>
-     <a href="/users/{{post.user.id}}">
-        {{post.user.username}}
-    </a>
- {{post.format_time()}}</small>
+<!-- Lists all the posts, if there are no posts says so -->
+{% for post in posts %}
+<blockquote>
+	<a href="/posts/{{post.id}}"><b>{{post.title}}</b></a>
+	<p>{{post.content}}</p>
+	<small>
+		<a href="/users/{{post.user.id}}">{{post.user.username}}</a>
+		{{post.format_time()}}
+	</small>
 </blockquote>
-  {% else %}
-    <li><em>Unbelievable.  No entries here so far</em>
-  {% endfor %}
-
+{% else %}
+<em>Nobody has posted anything...</em>
+{% endfor %}
 {% endblock %}
-

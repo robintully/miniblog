@@ -1,11 +1,12 @@
 from flask import current_app
 from blog import db
-
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from blog import db
+# Creates all models for the SQLAlchemy database and sets configurations
 
-
+# Users have a name a hashed password
+# Users have many posts and have many comments
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True)
@@ -25,7 +26,7 @@ class User(db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
-
+# Posts have content, a title, a timestamp, belong to a user, and have many comments
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text)
@@ -46,7 +47,7 @@ class Post(db.Model):
     def format_time(self):
         return str(self.timestamp.month) + "/"+  str(self.timestamp.day) + "/" + str(self.timestamp.year)
 
-
+# Comments have a content a a timestamp, they belong to both a user and a post
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text)
@@ -63,6 +64,6 @@ class Comment(db.Model):
         self.content = content
 
     def __repr__(self):
-        return 'content: %r' % self.content
+        return '<Comment %r' % self.content
 
    

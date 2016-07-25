@@ -1,48 +1,47 @@
 {% extends "layout.html" %}
 {% block body %}
+
+<!-- Show the post title, and the content with time -->
 <blockquote>
-    <b>{{post.title}}</b>
-    <p>{{post.content}}</p>
+  <b>{{post.title}}</b>
+  <p>{{post.content}}</p>
   <small>
- <a href="/users/{{post.user.id}}">
-        {{post.user.username}}
-    </a>
-   {{post.format_time()}}</small>
+   <a href="/users/{{post.user.id}}">{{post.user.username}}</a>
+   {{post.format_time()}}
+ </small>
 </blockquote>
 
-
-
-
- {% for comment in post.comments %}
- <blockquote class="blockquote-reverse">
+<!-- show all comments -->
+{% for comment in post.comments %}
+<blockquote class="blockquote-reverse">
   <p>{{comment.content}}</p>
-   <small>
+  <small>
     <a href="/users/{{comment.user.id}}">
-        {{comment.user.username}}
+      {{comment.user.username}}
     </a> </small>
-</blockquote>
+  </blockquote>
   {% endfor %}
 
-
-{% if session['user_id'] %}
-<form class="form-horizontal" method="POST" action="/posts/{{post.id}}">
-  <fieldset>
-    <legend>add comment</legend>
-    <div class="form-group">
+  <!-- if user is signed in, give them a form to post a comment -->
+  {% if session['user_id'] %}
+  <form class="form-horizontal" method="POST" action="/posts/{{post.id}}">
+    <fieldset>
+      <legend>add comment</legend>
+      <div class="form-group">
         {{ form.hidden_tag() }}
-    </div>
-    <div class="form-group">
-      <label for="comment" class="col-lg-2 control-label">    {{ form.content.label }}</label>
-       <div class="col-lg-10">
+      </div>
+      <div class="form-group">
+        <label for="comment" class="col-lg-2 control-label">{{form.content.label}}</label>
+        <div class="col-lg-10">
          {{ form.content (style="width:80%") }}
-      {% if form.content.errors %}
-    {% for error in form.content.errors %}
-      {{ error }}
-    {% endfor %}
-  {% endif %}
+         {% if form.content.errors %}
+         {% for error in form.content.errors %}
+         {{ error }}
+         {% endfor %}
+         {% endif %}
+       </div>
      </div>
-    </div>
-    <div class="form-group">
+     <div class="form-group">
       <div class="col-lg-10 col-lg-offset-2">
         <button type="reset" class="btn btn-default">Clear</button>
         <button type="submit" class="btn btn-primary">Submit</button>
@@ -52,45 +51,41 @@
 </form>
 {% endif %}
 
-{% if session['username']  == post.user.username %}
+<!-- if signed in user is the creator of post, show form to update post -->
+{% if user.username == post.user.username %}
 <form class="form-horizontal" method="POST" action="/update/{{post.id}}">
-    <fieldset>
+  <fieldset>
     <legend>Update the Post</legend>
     <div class="form-group">
-        {{ update_form.hidden_tag() }}
+      {{ update_form.hidden_tag() }}
       <label for="inputTitle" class="col-lg-2 control-label"> {{ update_form.title.label }}</label>
       <div class="col-lg-10">
-         {{ update_form.title (style="width:80%")}}
-      {% if update_form.title.errors %}
-    {% for error in update_form.title.errors %}
-      {{ error }}
-    {% endfor %}
-  {% endif %}
+       {{ update_form.title (style="width:80%")}}
+       {% if update_form.title.errors %}
+       {% for error in update_form.title.errors %}
+       {{ error }}
+       {% endfor %}
+       {% endif %}
      </div>
-    </div>
-    <div class="form-group">
-      <label for="inputcContent" class="col-lg-2 control-label">    {{ update_form.content.label }}</label>
-       <div class="col-lg-10">
-                {{ update_form.content(style="width:80%", rows=30) }}
+   </div>
+   <div class="form-group">
+    <label for="inputcContent" class="col-lg-2 control-label">    {{ update_form.content.label }}</label>
+    <div class="col-lg-10">
+      {{ update_form.content(style="width:80%", rows=30) }}
       {% if update_form.content.errors %}
-    {% for error in update_form.content.errors %}
+      {% for error in update_form.content.errors %}
       {{ error }}
-    {% endfor %}
-  {% endif %}
-     </div>
-      
+      {% endfor %}
+      {% endif %}
     </div>
-    
-   
-
-
-    <div class="form-group">
-      <div class="col-lg-10 col-lg-offset-2">
-        <button type="reset" class="btn btn-default">Clear</button>
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </div>
+  </div>
+  <div class="form-group">
+    <div class="col-lg-10 col-lg-offset-2">
+      <button type="reset" class="btn btn-default">Clear</button>
+      <button type="submit" class="btn btn-primary">Submit</button>
     </div>
-  </fieldset>
+  </div>
+</fieldset>
 </form>
 {% endif %}
 {% endblock %}
