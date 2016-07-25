@@ -1,4 +1,4 @@
-# Minublog
+# Miniblog
 
 Miniblog is a microblog platform built with the Python Flask framework. Miniblog emphasizes a lightweight, modular and fast blogging framework. Flask was chosen due to its minimal prerequisites and lightweigt; Miniblog does not carry deadweight.
 
