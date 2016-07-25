@@ -115,7 +115,7 @@ def show_user(user_id):
 
 @app.route('/delete_post', methods = ['POST'])
 def delete_post():
-    user = User.query.filter_by(username= session['username']).first()
+    user = User.query.get(session['user_id'])
     post = Post.query.get(request.form['post'])
     for comment in post.comments:
         db.session.delete(comment)
@@ -127,7 +127,7 @@ def delete_post():
 
 @app.route('/delete_comment', methods = ['POST'])
 def delete_comment():
-    user = User.query.filter_by(username= session['username']).first()
+    user = User.query.get(session['user_id'])
     comment = Comment.query.get(request.form['comment'])
     db.session.delete(comment)
     db.session.commit()
@@ -169,8 +169,8 @@ def show_post(post_id):
     update_form.title.data = post.title
     update_form.content.data = post.content
 
-    if request.method == 'POST'  and form.validate() and session['username']:
-        user = User.query.filter_by(username= session['username']).first()
+    if request.method == 'POST'  and form.validate() and session['user_id']:
+        user = User.query.get(session['user_id'])
         comment = Comment(user,post,request.form['content'])
         db.session.add(comment)
         db.session.commit()

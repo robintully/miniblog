@@ -24,7 +24,7 @@
   {% endfor %}
 
 
-{% if session['username'] %}
+{% if session['user_id'] %}
 <form class="form-horizontal" method="POST" action="/posts/{{post.id}}">
   <fieldset>
     <legend>add comment</legend>
