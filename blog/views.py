@@ -3,7 +3,6 @@ from blog import app
 from blog.models import User, Post, Comment
 from blog.forms import LogIn,Register,CreatePost,CreateComment,UpdateForm
 from blog import db
-from functools import wraps
 
 # Views have to assign variables, render methods, and instantiate templates with passed in variables
 
