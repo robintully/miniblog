@@ -70,7 +70,6 @@ def create_post():
 
 @app.route('/posts/<int:post_id>', methods = ('GET','POST'))
 def show_post(post_id):
-    user = User.query.get(session['user_id'])
     post = Post.query.get(post_id)
     form = CreateComment()
     update_form = UpdateForm()
@@ -83,7 +82,7 @@ def show_post(post_id):
         db.session.add(comment)
         db.session.commit()
         flash('Added Comment')
-    return render_template('show_post.html', post = post, form = form, update_form = update_form, user = user)
+    return render_template('show_post.html', post = post, form = form, update_form = update_form)
 
 @app.route('/update/<int:post_id>', methods = ['POST'])
 def update_post(post_id):

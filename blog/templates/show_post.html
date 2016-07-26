@@ -52,7 +52,7 @@
 {% endif %}
 
 <!-- if signed in user is the creator of post, show form to update post -->
-{% if user.username == post.user.username %}
+{% if session['user_id'] == post.user.id %}
 <form class="form-horizontal" method="POST" action="/update/{{post.id}}">
   <fieldset>
     <legend>Update the Post</legend>
